@@ -265,26 +265,33 @@ L.Control.Markup = L.Control.extend(/** @lends L.Control.Markup.prototype */ {
         this.canvas = null;
     },
 
+
     get_canvas: function () {
         if (null === this.canvas) {
             this.canvas = document.createElement("canvas");
             this.canvas.className = 'canvases';
             this.canvas.id = 'markup-canvas';
-            var canvasDiv = this._map._container; //looking for #map div
-            //var canvasDiv = this._map.getPane('overlayPane');
-            this.canvas.style.width = '100%';
-            this.canvas.style.height = '100%';
-            canvasDiv.prepend(this.canvas);
 
-            // ...then set the internal size to match
-            //this.canvas.width = this.canvas.offsetWidth;
-            //this.canvas.height = this.canvas.offsetHeight;
-            this.canvas.width = this.canvas.clientWidth;
-            this.canvas.height = this.canvas.clientHeight;
+            var pane = this.get_pane();
+            pane.prepend(this.canvas);
+
+            this.canvas.width = this._map._container.offsetWidth;
+            this.canvas.height = this._map._container.offsetHeight;
 
         }
         return this.canvas;
     },
+
+    get_pane: function () {
+
+        var pane = this._map.getPane('markup')
+        if (!pane) {
+            pane = this._map.createPane('markup');
+        }
+        pane.style.zIndex = 650;
+        return pane;
+    },
+
 
     lock_map: function(){
 
